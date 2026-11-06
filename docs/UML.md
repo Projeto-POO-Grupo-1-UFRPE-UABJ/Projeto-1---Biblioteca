@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
     direction TB
 
@@ -61,3 +62,4 @@ classDiagram
     Professor --|> Usuario
     Usuario "1" --o "0..*" Emprestimo
     Emprestimo "0..*" o-- "1" Livro
+```
