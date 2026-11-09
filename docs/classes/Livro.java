@@ -60,7 +60,7 @@ public class Livro {
     }
 
     public void emprestarExemplar() throws LivroIndisponivelException {
-        if (temExemplar() == false) {
+        if (!temExemplar()) {
             throw new LivroIndisponivelException("Nao tem um exemplar disponivel desse livro");
         }
         exemplaresDisponiveis = exemplaresDisponiveis - 1;
