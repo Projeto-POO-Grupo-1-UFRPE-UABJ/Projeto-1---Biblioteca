@@ -1,3 +1,5 @@
+package modelos;
+
 public class Aluno extends Usuario {
 
 	    public Aluno(int id, String nome, String matricula) {

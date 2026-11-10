@@ -1,3 +1,5 @@
+package modelos;
+
 public class Professor extends Usuario {
 	 
     public Professor(int id, String nome, String matricula) {
