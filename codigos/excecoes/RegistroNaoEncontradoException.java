@@ -4,7 +4,7 @@ public class RegistroNaoEncontradoException extends Exception {
         super(mensagem);
     }
   
-    public RegistroNaoEncontradoException(String entidade, int id) {
-        super("Registro não encontrado: " + entidade + " com id " + id + ".");
+    public RegistroNaoEncontradoException(String usuario, int id) {
+        super("Registro não encontrado: " + usuario + " com id " + id + ".");
     }
 }
