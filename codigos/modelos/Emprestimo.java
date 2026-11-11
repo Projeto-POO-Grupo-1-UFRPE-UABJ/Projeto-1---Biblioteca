@@ -14,6 +14,14 @@ public class Emprestimo {
 	private Livro livro;
 	
 	public Emprestimo(int id, Usuario usuario, Livro livro) throws LivroIndisponivelException, LimiteEmprestimosException {
+		if(!usuario.temLimite()) {
+			throw new LimiteEmprestimosException("O usuário já alcançou o limite de " + usuario.getLimiteMaximo() + " empréstimos simultâneos.");
+		}
+		
+		if(!livro.temExemplar()) {
+			throw new LivroIndisponivelException("O livro não possui mais exemplares disponíveis.");
+		}
+		
 		usuario.somarLimite();
 		livro.emprestarExemplar();
 		
@@ -41,7 +49,7 @@ public class Emprestimo {
 		return dataDevolucao;
 	}
 	
-	public Usuario getUsario() {
+	public Usuario getUsuario() {
 		return usuario;
 	}
 	
@@ -50,32 +58,34 @@ public class Emprestimo {
 	}
 	
 	public boolean estaAberto() {
-		return dataDevolucao == null ? true : false;
+		return dataDevolucao == null;
 	}
 	
 	public boolean estaAtrasado() {
-		return dataDevolucao == null ? LocalDate.now().isAfter(dataPrevista) : dataDevolucao.isAfter(dataPrevista);
+		return calcAtraso() > 0;
 	}
 	
 	public long calcAtraso() {
-		return Math.max(0, dataPrevista.until(dataDevolucao, ChronoUnit.DAYS));
+		return Math.max(0, dataPrevista.until(estaAberto() ? LocalDate.now() : dataDevolucao, ChronoUnit.DAYS));
 	}
 	
 	public double calcMulta() {
-		return calcAtraso() > 0 ? calcAtraso() * usuario.getTaxa() : 0.00;
+		return calcAtraso() * usuario.getTaxa();
 	}
 	
-	public double devolver() {
-		dataDevolucao = LocalDate.now();
-		usuario.subtrairLimite();
-		livro.devolverExemplar();
-		return calcMulta();
+	public double devolver() throws EmprestimoEncerradoException {
+		return devolver(LocalDate.now());
 	}
 	
-	public double devolver(LocalDate dataDevolucao) {
+	public double devolver(LocalDate dataDevolucao) throws EmprestimoEncerradoException {
+		if(this.dataDevolucao != null) {
+			throw new EmprestimoEncerradoException("Não é possível encerrar este empréstimo pois ele já foi encerrado anteriormente na data: " + this.dataDevolucao);
+		}
+		
 		this.dataDevolucao = dataDevolucao;
 		usuario.subtrairLimite();
 		livro.devolverExemplar();
+		
 		return calcMulta();
 	}
 }
