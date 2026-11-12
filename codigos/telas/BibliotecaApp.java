@@ -118,15 +118,102 @@ public class BibliotecaApp {
     }
 
     private static void cadastrarLivro() {
-    
+        System.out.println();
+        System.out.println("===== Cadastro de Livro =====");
+        String titulo = lerTexto("Título: ");
+        String autor = lerTexto("Autor: ");
+        String isbn = lerTexto("ISBN: ");
+        int exemplares = lerInteiro("Quantidade de exemplares: ");
+
+        if(exemplares <= 0) {
+            System.out.println("A quantidade de exemplares deve ser maior que zero.");
+            return;
+        }
+
+        Livro livro = new Livro(proximoIdLivro, titulo, autor, isbn, exemplares);
+        livros.add(livro);
+        proximoIdLivro++;
+        System.out.println("Livro cadastrado com sucesso!");
+        System.out.println("ID do livro: " + livro.getId());
     }
 
     private static void listarLivros() {
-    
+        if(livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return;
+        }
+        
+        System.out.println("\n===== Livros Cadastrados =====");
+        for (Livro livro: livros) {
+            exibirLivro(livro);
+        }
+    }
+
+    private static void exibirLivro(Livro livro) {
+        System.out.println("ID: " + livro.getId() + " | Título: " + livro.getTitulo() + " | Autor: " + livro.getAutor() + 
+        " | ISBN: " + livro.getIsbn() + " | Exemplares: " + livro.getExemplaresDisponiveis() + " | Total de Exemplares: " + livro.getTotalExemplares());
     }
 
     private static void buscarLivro() {
-    
+        System.out.println();
+        System.out.println("===== Buscar Livro =====");
+        System.out.println("Título (Enter para pular): ");
+        String titulo = scanner.nextLine().trim();
+        System.out.println("Autor (Enter para pular): ");
+        String autor = scanner.nextLine().trim();
+
+        ArrayList<Livro> encontrados;
+
+        if (!titulo.isEmpty() && !autor.isEmpty()) {
+            encontrados = buscarLivros(titulo, autor);
+        } else if (!titulo.isEmpty()) {
+            encontrados = buscarLivros(titulo);
+        } else if (!autor.isEmpty()) {
+            encontrados = buscarPorAutor(autor);
+        } else {
+            System.out.println("Digite pelo menos um título ou autor.");
+            return;
+        }
+
+        if(encontrados.isEmpty()) {
+            System.out.println("Nenhum livro encontrado.");
+        } else {
+            for (Livro livro: encontrados) {
+                exibirLivro(livro);
+            }
+        }
+    }
+
+    private static ArrayList<Livro> buscarLivros(String titulo) {
+        ArrayList<Livro> encontrados = new ArrayList<>();
+        for (Livro livro: livros) {
+            if (livro.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
+                encontrados.add(livro);
+            }
+        }
+        return encontrados;
+    }
+
+    private static ArrayList<Livro> buscarLivros(String titulo, String autor) {
+        ArrayList<Livro> encontrados = new ArrayList<>();
+        for (Livro livro: livros) {
+            boolean achouTitulo = livro.getTitulo().toLowerCase().contains(titulo.toLowerCase());
+            boolean achouAutor = livro.getAutor().toLowerCase().contains(autor.toLowerCase());
+            if (achouTitulo && achouAutor) {
+                encontrados.add(livro);
+            }
+        }
+        return encontrados;
+    }
+
+    private static ArrayList<Livro> buscarPorAutor(String autor) {
+        ArrayList<Livro> encontrados = new ArrayList<>();
+        for (Livro livro: livros) {
+            if (livro.getAutor().toLowerCase().contains(autor.toLowerCase())) {
+                encontrados.add(livro);
+            }
+        }
+        return encontrados;
     }
 
     private static void cadastrarUsuario() {
