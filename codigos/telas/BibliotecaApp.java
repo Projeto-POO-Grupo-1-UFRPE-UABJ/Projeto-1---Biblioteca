@@ -94,6 +94,29 @@ public class BibliotecaApp {
         }
     }
 
+    private static String lerTexto(String mensagem) {
+        while(true) {
+            System.out.print(mensagem);
+            String texto = scanner.nextLine().trim();
+            if (!texto.isEmpty()) {
+                return texto;
+            }
+            System.out.println("Esse campo não pode ficar vazio. Por favor, insira algo.");
+        }
+    }
+
+    private static int lerInteiro(String mensagem) {
+        while(true) {
+            System.out.print(mensagem);
+            String linha = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(linha.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, digite um número inteiro.");
+            }
+        }
+    }
+
     private static void cadastrarLivro() {
     
     }
